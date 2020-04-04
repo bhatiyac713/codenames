@@ -71,7 +71,24 @@ export class Game extends React.Component {
 
   public toggleRole(e, role) {
     e.preventDefault();
-    this.setState({ codemaster: role == 'codemaster' });
+
+    if (role == 'codemaster') {
+      $.post(
+         '/codemaster', 
+         JSON.stringify({
+            game_id: this.state.game.id
+         }),
+         data => {
+            console.log(data)
+            if (data === 'ok\n') {
+               alert("You're now the codemaster!");
+               this.setState({ codemaster: true });
+            } else {
+               alert("No cheating! 2 Codemasters already picked");
+            }
+         }
+      );
+    }
   }
 
   public guess(e, idx, word) {
@@ -284,14 +301,16 @@ export class Game extends React.Component {
           <button
             onClick={e => this.toggleRole(e, 'player')}
             className="player"
+            disabled={this.state.codemaster == true}
           >
             Player
           </button>
           <button
             onClick={e => this.toggleRole(e, 'codemaster')}
             className="codemaster"
+            // disabled={this.state.game.codemasters == 2}
           >
-            Spymaster
+            Codemaster
           </button>
           <button onClick={e => this.nextGame(e)} id="next-game-btn">
             Next game

@@ -112,6 +112,7 @@ type Game struct {
 	WinningTeam  *Team     `json:"winning_team,omitempty"`
 	Words        []string  `json:"words"`
 	Layout       []Team    `json:"layout"`
+	CodeMasters  int       `json:codemasters`
 
 	mu        sync.Mutex
 	marshaled []byte

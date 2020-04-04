@@ -153,6 +153,30 @@ func (s *Server) handleEndTurn(rw http.ResponseWriter, req *http.Request) {
 	writeGame(rw, g)
 }
 
+func (s *Server) handleCodeMaster(rw http.ResponseWriter, req *http.Request) {
+
+	var request struct {
+		GameID  string `json:"game_id"`
+	}
+	if err := json.NewDecoder(req.Body).Decode(&request); err != nil {
+		http.Error(rw, "Error decoding", 400)
+		return
+	}
+
+	g, ok := s.games[request.GameID]
+	if !ok {
+		http.Error(rw, "No such game", 404)
+		return
+	}
+	if g.CodeMasters == 2 {
+		http.Error(rw, "fail", 200)
+		return
+	}
+	g.CodeMasters = g.CodeMasters + 1
+	fmt.Println("There are", g.CodeMasters,  "codemasters")
+	http.Error(rw, "ok", 200)
+}
+
 func (s *Server) handleNextGame(rw http.ResponseWriter, req *http.Request) {
 	var request struct {
 		GameID    string   `json:"game_id"`
@@ -246,6 +270,7 @@ func (s *Server) Start() error {
 	s.mux.HandleFunc("/next-game", s.handleNextGame)
 	s.mux.HandleFunc("/end-turn", s.handleEndTurn)
 	s.mux.HandleFunc("/guess", s.handleGuess)
+	s.mux.HandleFunc("/codemaster", s.handleCodeMaster)
 	s.mux.HandleFunc("/game/", s.handleRetrieveGame)
 	s.mux.HandleFunc("/game-state", s.handleGameState)
 	s.mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("frontend/dist"))))
