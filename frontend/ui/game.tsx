@@ -61,7 +61,7 @@ export class Game extends React.Component {
     if (this.state.game && this.state.game.state_id) {
       body.state_id = this.state.game.state_id;
     }
-    $.post('/game-state', JSON.stringify(body), data => {
+    $.post('/game-state', JSON.stringify(body), (data) => {
       if (this.state.game && data.created_at != this.state.game.created_at) {
         this.setState({ codemaster: false });
       }
@@ -82,7 +82,7 @@ export class Game extends React.Component {
         JSON.stringify({
           game_id: this.state.game.id,
         }),
-        data => {
+        (data) => {
           console.log(data);
           if (data === 'ok\n') {
             alert("You're now the codemaster!");
@@ -111,7 +111,7 @@ export class Game extends React.Component {
         state_id: this.state.game.state_id,
         index: idx,
       }),
-      g => {
+      (g) => {
         this.setState({ game: g });
       }
     );
@@ -144,7 +144,7 @@ export class Game extends React.Component {
         game_id: this.state.game.id,
         state_id: this.state.game.state_id,
       }),
-      g => {
+      (g) => {
         this.setState({ game: g });
       }
     );
@@ -166,7 +166,7 @@ export class Game extends React.Component {
         word_set: this.state.game.word_set,
         create_new: true,
       }),
-      g => {
+      (g) => {
         this.setState({ game: g, codemaster: false });
       }
     );
@@ -200,7 +200,7 @@ export class Game extends React.Component {
     if (this.state.mode == 'settings') {
       return (
         <SettingsPanel
-          toggleView={e => this.toggleSettingsView(e)}
+          toggleView={(e) => this.toggleSettingsView(e)}
           toggle={(e, setting) => this.toggleSetting(e, setting)}
           values={this.state.settings}
         />
@@ -227,7 +227,7 @@ export class Game extends React.Component {
     if (!this.state.game.winning_team && !this.state.codemaster) {
       endTurnButton = (
         <div id="end-turn-cont">
-          <button onClick={e => this.endTurn(e)} id="end-turn-btn">
+          <button onClick={(e) => this.endTurn(e)} id="end-turn-btn">
             End {this.currentTeam()}&#39;s turn
           </button>
         </div>
@@ -285,7 +285,7 @@ export class Game extends React.Component {
                 ' ' +
                 (this.state.game.revealed[idx] ? 'revealed' : 'hidden-word')
               }
-              onClick={e => this.guess(e, idx, w)}
+              onClick={(e) => this.guess(e, idx, w)}
             >
               <span className="word">{w}</span>
             </div>
@@ -298,25 +298,25 @@ export class Game extends React.Component {
           }
         >
           <SettingsButton
-            onClick={e => {
+            onClick={(e) => {
               this.toggleSettingsView(e);
             }}
           />
           <button
-            onClick={e => this.toggleRole(e, 'player')}
+            onClick={(e) => this.toggleRole(e, 'player')}
             className="player"
             disabled={this.state.codemaster == true}
           >
             Player
           </button>
           <button
-            onClick={e => this.toggleRole(e, 'codemaster')}
+            onClick={(e) => this.toggleRole(e, 'codemaster')}
             className="codemaster"
-            // disabled={this.state.game.codemasters == 2}
+            disabled={this.state.codemaster == true}
           >
             Codemaster
           </button>
-          <button onClick={e => this.nextGame(e)} id="next-game-btn">
+          <button onClick={(e) => this.nextGame(e)} id="next-game-btn">
             Next game
           </button>
         </form>
