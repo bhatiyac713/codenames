@@ -27,7 +27,7 @@ export class App extends React.Component {
     return (
       <div id="application">
         <div id="topbar">
-          <a href={'http://' + window.location.host}>
+          <a href={'https://' + window.location.host}>
             <h1>Codenames</h1>
           </a>
         </div>
@@ -37,6 +37,6 @@ export class App extends React.Component {
   }
 }
 
-document.addEventListener('DOMContentLoaded', event => {
+document.addEventListener('DOMContentLoaded', (event) => {
   ReactDOM.render(<App />, document.getElementById('app'));
 });
