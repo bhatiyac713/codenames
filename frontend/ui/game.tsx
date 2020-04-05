@@ -6,6 +6,10 @@ import { Settings, SettingsButton, SettingsPanel } from '~/ui/settings';
 let jquery = require('jquery');
 window.$ = window.jQuery = jquery;
 
+let audio = new Audio(
+  'https://notificationsounds.com/soundfiles/3493894fa4ea036cfc6433c3e2ee63b0/file-sounds-1138-moonless.mp3'
+);
+
 export class Game extends React.Component {
   constructor(props) {
     super(props);
@@ -74,19 +78,20 @@ export class Game extends React.Component {
 
     if (role == 'codemaster') {
       $.post(
-         '/codemaster', 
-         JSON.stringify({
-            game_id: this.state.game.id
-         }),
-         data => {
-            console.log(data)
-            if (data === 'ok\n') {
-               alert("You're now the codemaster!");
-               this.setState({ codemaster: true });
-            } else {
-               alert("No cheating! 2 Codemasters already picked");
-            }
-         }
+        '/codemaster',
+        JSON.stringify({
+          game_id: this.state.game.id,
+        }),
+        data => {
+          console.log(data);
+          if (data === 'ok\n') {
+            alert("You're now the codemaster!");
+            this.setState({ codemaster: true });
+          } else {
+            audio.play();
+            alert('No cheating! 2 Codemasters already picked');
+          }
+        }
       );
     }
   }
@@ -148,10 +153,9 @@ export class Game extends React.Component {
   public nextGame(e) {
     e.preventDefault();
     // Ask for confirmation when current game hasn't finished
-    let allowNextGame = (
+    let allowNextGame =
       this.state.game.winning_team ||
-      confirm("Do you really want to start a new game?")
-    );
+      confirm('Do you really want to start a new game?');
     if (!allowNextGame) {
       return;
     }
@@ -316,7 +320,11 @@ export class Game extends React.Component {
             Next game
           </button>
         </form>
-        <div id="coffee"><a href="https://www.buymeacoffee.com/jbowens">Buy the developer a coffee.</a></div>
+        <div id="coffee">
+          <a href="https://www.buymeacoffee.com/jbowens">
+            Buy the developer a coffee.
+          </a>
+        </div>
       </div>
     );
   }
